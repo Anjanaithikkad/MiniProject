@@ -42,6 +42,13 @@ class _WeeklyProgressPageState extends State<WeeklyProgressPage> {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+        print('Backend response data: $data'); // Debug log
+        
+        // Log specific wellness metrics
+        print('Wellness metrics from backend:');
+        print('  currentFocusLevel: ${data['currentFocusLevel']}');
+        print('  avgScreenTime: ${data['avgScreenTime']}');
+        print('  avgNightUsage: ${data['avgNightUsage']}');
         
         setState(() {
           weeklyData = {
@@ -54,6 +61,7 @@ class _WeeklyProgressPageState extends State<WeeklyProgressPage> {
               'avgAcademicAppRatio': data['avgAcademicAppRatio'] ?? 0,
             }
           };
+          print('Processed weeklyData: $weeklyData'); // Debug log
           isLoading = false;
         });
       } else if (response.statusCode == 404) {
@@ -63,33 +71,41 @@ class _WeeklyProgressPageState extends State<WeeklyProgressPage> {
           isLoading = false;
         });
       } else {
-        // Other HTTP errors - fallback to mock data
-        print('Server error ${response.statusCode}, falling back to demo data');
-        generateMockData();
+        // Other HTTP errors - do not fallback to mock data to ensure real data is used
+        print('Server error ${response.statusCode}');
+        setState(() {
+          errorMessage = 'Failed to load data. Please try again later.';
+          isLoading = false;
+        });
       }
     } catch (e) {
       print('Error fetching data: $e');
-      // Network error - fallback to mock data for demonstration
-      generateMockData();
+      // Network error - do not fallback to mock data to ensure real data is used
+      setState(() {
+        errorMessage = 'Network error. Please check your connection and try again.';
+        isLoading = false;
+      });
     }
   }
 
   void generateMockData() {
-    print('Generating mock weekly progress data...');
+    print('⚠️  WARNING: Using mock data for demonstration purposes only!');
+    print('⚠️  In production, real data should be fetched from the backend database.');
     
     setState(() {
       weeklyData = {
         'analytics': {
           'currentMark': 85,
           'currentStudyHours': 4,
-          'currentFocusLevel': 7.5,
-          'avgScreenTime': 6.2,
-          'avgNightUsage': 1.8,
+          'currentFocusLevel': 7.5,  // 7.5/10 focus level
+          'avgScreenTime': 240,      // 240 minutes = 4 hours screen time
+          'avgNightUsage': 60,       // 60 minutes = 1 hour night usage
           'avgAcademicAppRatio': 0.65,
         }
       };
+      print('Mock data generated: $weeklyData'); // Debug log
       isLoading = false;
-      print('Mock data generated successfully');
+      print('⚠️  Mock data generated successfully - for testing only!');
     });
   }
 
@@ -256,38 +272,93 @@ class _WeeklyProgressPageState extends State<WeeklyProgressPage> {
     final screenTime = (analytics['avgScreenTime'] ?? 0).toDouble();
     final nightUsage = (analytics['avgNightUsage'] ?? 0).toDouble();
 
+    // Check if all values are zero or very small to show a more meaningful message
+    if (focusLevel < 0.1 && screenTime < 1 && nightUsage < 1) {
+      return Container(
+        height: 200,
+        padding: const EdgeInsets.all(16),
+        alignment: Alignment.center,
+        child: Text(
+          'No recent wellness data available. Wellness metrics are calculated based on the last 14 days of phone usage. Continue using the app to see your wellness trends.',
+          textAlign: TextAlign.center,
+          style: TextStyle(color: AppTheme.textSecondary, fontSize: 14),
+        ),
+      );
+    }
+
+    // Scale the values to make them more comparable in the pie chart
+    // Focus Level: 0-10 scale, so multiply by 10 to get 0-100
+    // Screen Time: in minutes, so divide by 6 to get a 0-100 scale (assuming max 600 minutes or 10 hours)
+    // Night Usage: in minutes, so divide by 1.2 to get a 0-100 scale (assuming max 120 minutes or 2 hours)
+    final scaledFocus = focusLevel * 10;
+    final scaledScreen = screenTime / 6;
+    final scaledNight = nightUsage / 1.2;
+
+    // Create a more balanced representation by ensuring all values contribute
+    // to the pie chart while preserving their relative proportions
+    double adjustedFocus = scaledFocus;
+    double adjustedScreen = scaledScreen;
+    double adjustedNight = scaledNight;
+
+    // If any value is zero, give it a small value to ensure visibility
+    if (adjustedFocus == 0) adjustedFocus = 1;
+    if (adjustedScreen == 0) adjustedScreen = 1;
+    if (adjustedNight == 0) adjustedNight = 1;
+
+    // Normalize the values to ensure they're all visible
+    final adjustedTotal = adjustedFocus + adjustedScreen + adjustedNight;
+    
+    // Apply a minimum percentage to ensure visibility (at least 5% of the pie)
+    final minPercentage = 0.05;
+    final minPortion = adjustedTotal * minPercentage;
+    
+    if (adjustedFocus < minPortion) adjustedFocus = minPortion;
+    if (adjustedScreen < minPortion) adjustedScreen = minPortion;
+    if (adjustedNight < minPortion) adjustedNight = minPortion;
+
+    // Format the labels based on whether values are available
+    final screenLabel = screenTime > 0 
+        ? '${(screenTime/60).toStringAsFixed(1)}h' 
+        : 'No data';
+    final nightLabel = nightUsage > 0 
+        ? '${nightUsage.toStringAsFixed(0)}m' 
+        : 'No data';
+    final focusLabel = focusLevel > 0 
+        ? '${focusLevel.toStringAsFixed(1)}' 
+        : 'No data';
+
     return PieChart(
       PieChartData(
         sections: [
           PieChartSectionData(
             color: AppTheme.primaryColor,
-            value: focusLevel * 10, // Scale to 0-100
-            title: 'Focus',
+            value: adjustedFocus,
+            title: 'Focus\n$focusLabel',
             radius: 50,
             titleStyle: const TextStyle(
-              fontSize: 12,
+              fontSize: 10,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
           ),
           PieChartSectionData(
             color: AppTheme.secondaryColor,
-            value: screenTime * 4, // Scale to 0-100 (assuming max 24 hours)
-            title: 'Screen Time',
+            value: adjustedScreen,
+            title: 'Screen\n$screenLabel',
             radius: 50,
             titleStyle: const TextStyle(
-              fontSize: 12,
+              fontSize: 10,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
           ),
           PieChartSectionData(
             color: AppTheme.accentTeal,
-            value: nightUsage * 10, // Scale to 0-100 (assuming max 10 hours)
-            title: 'Night Usage',
+            value: adjustedNight,
+            title: 'Night\n$nightLabel',
             radius: 50,
             titleStyle: const TextStyle(
-              fontSize: 12,
+              fontSize: 10,
               fontWeight: FontWeight.bold,
               color: Colors.white,
             ),
@@ -316,6 +387,12 @@ class _WeeklyProgressPageState extends State<WeeklyProgressPage> {
     final focusLevel = (analytics['currentFocusLevel'] ?? 0).toDouble();
     final screenTime = (analytics['avgScreenTime'] ?? 0).toDouble();
     final nightUsage = (analytics['avgNightUsage'] ?? 0).toDouble();
+
+    // Scale wellness metrics to match the 0-100 scale for better visualization
+    // Screen Time: in minutes, so divide by 6 to get a 0-100 scale (assuming max 600 minutes or 10 hours)
+    // Night Usage: in minutes, so divide by 1.2 to get a 0-100 scale (assuming max 120 minutes or 2 hours)
+    final scaledScreen = screenTime / 6;
+    final scaledNight = nightUsage / 1.2;
 
     // Prepare line chart data
     List<FlSpot> academicSpots = [
