@@ -406,7 +406,7 @@ Future<void> saveAcademicData() async {
                   });
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 207, 89, 181),
+                  backgroundColor: const Color.fromARGB(255, 187, 129, 75),
                   foregroundColor: AppTheme.textOnPrimary,
                   padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                   shape: RoundedRectangleBorder(
@@ -549,7 +549,7 @@ Future<void> saveAcademicData() async {
                         await saveAcademicData();
                       },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 199, 76, 173),
+                  backgroundColor: const Color.fromARGB(255, 98, 66, 2),
                   foregroundColor: AppTheme.textOnPrimary,
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
                   shape: RoundedRectangleBorder(

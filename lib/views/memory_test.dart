@@ -210,7 +210,7 @@ class _MemoryTestPageState extends State<MemoryTestPage> {
           text: "Back to Dashboard",
           onPressed: () => Navigator.pop(context),
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromARGB(255, 199, 76, 173),
+            backgroundColor: const Color.fromARGB(255, 247, 183, 54),
             foregroundColor: AppTheme.textOnPrimary,
             padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
             shape: RoundedRectangleBorder(
@@ -264,7 +264,7 @@ class _MemoryTestPageState extends State<MemoryTestPage> {
           text: "Start Test",
           onPressed: _startTest,
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromARGB(255, 199, 76, 173),
+            backgroundColor: const Color.fromARGB(255, 247, 183, 54),
             foregroundColor: AppTheme.textOnPrimary,
             padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
             shape: RoundedRectangleBorder(
@@ -513,7 +513,7 @@ Widget _quickMathGame() {
         children: _mathOptions!.map((o) {
           return ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 215, 107, 186),
+              backgroundColor: const Color.fromARGB(255, 247, 183, 54),
               foregroundColor: AppTheme.textOnPrimary,
               minimumSize: const Size(60, 50),
               shape: RoundedRectangleBorder(
@@ -598,7 +598,7 @@ Widget _quickMathGame() {
           children: colorMap.keys.map((c) {
             return ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 215, 107, 186),
+                backgroundColor: const Color.fromARGB(255, 247, 183, 54),
                 foregroundColor: AppTheme.textOnPrimary,
                 minimumSize: const Size(80, 50),
                 shape: RoundedRectangleBorder(
@@ -849,7 +849,7 @@ Widget _wordRecallGame() {
           children: _options
               .map((word) => ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 215, 107, 186),
+                      backgroundColor: const Color.fromARGB(255, 247, 183, 54),
                       foregroundColor: AppTheme.textOnPrimary,
                       minimumSize: const Size(80, 50),
                       shape: RoundedRectangleBorder(
@@ -1045,7 +1045,7 @@ Widget _numberTapGame() {
         children: _numberSequence!.map((n) {
           return ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 215, 107, 186),
+              backgroundColor: const Color.fromARGB(255, 247, 183, 54),
               foregroundColor: AppTheme.textOnPrimary,
               minimumSize: const Size(50, 50),
               shape: RoundedRectangleBorder(
@@ -1156,7 +1156,7 @@ Widget _numberTapGame() {
         children: List.generate(4, (i) {
           return ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 215, 107, 186),
+              backgroundColor: const Color.fromARGB(255, 247, 183, 54),
               foregroundColor: AppTheme.textOnPrimary,
               minimumSize: const Size(80, 50),
               shape: RoundedRectangleBorder(
