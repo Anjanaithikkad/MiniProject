@@ -501,28 +501,25 @@ class _WeeklyProgressPageState extends State<WeeklyProgressPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            ThemeHelpers.themedAvatar(
-              size: 40,
-              icon: Icons.bar_chart_outlined,
-            ),
-            const SizedBox(width: 12),
-            Text(
-              'Weekly Progress',
-              style: Theme.of(context).appBarTheme.titleTextStyle,
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: fetchWeeklyData,
-            tooltip: 'Refresh Data',
-          ),
-        ],
-      ),
+ appBar: AppBar(
+  leading: ThemeHelpers.themedAvatar(size: 40, icon: Icons.bar_chart_outlined),
+  title: const Flexible(
+    child: Text(
+      'Weekly Progress',
+      overflow: TextOverflow.ellipsis,
+    ),
+  ),
+  actions: [
+    IconButton(
+      icon: Icon(Icons.refresh),
+      onPressed: fetchWeeklyData,
+      tooltip: 'Refresh Data',
+    ),
+  ],
+),
+
+
+
       body: ThemeHelpers.gradientBackground(
         child: isLoading
             ? Center(

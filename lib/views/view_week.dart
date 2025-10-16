@@ -268,7 +268,7 @@ class _ViewWeeklyAcademicSummaryState extends State<ViewWeeklyAcademicSummary> {
             ),
             const SizedBox(width: 12),
             Text(
-              'Weekly Academic Summary',
+              'Weekly Summary',
               style: Theme.of(context).appBarTheme.titleTextStyle,
             ),
           ],
