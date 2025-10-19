@@ -436,18 +436,20 @@ void generateMockRecommendations({String? message}) {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Row(
-          children: [
+        title: Flexible(
+          child:Row( 
+            children: [
             ThemeHelpers.themedAvatar(
               size: 40,
               icon: Icons.recommend_outlined,
             ),
             const SizedBox(width: 12),
             Text(
-              'Daily Recommendations',
+              'Recommendations',
               style: Theme.of(context).appBarTheme.titleTextStyle,
             ),
-          ],
+            ],
+          )
         ),
         actions: [
           // Debug indicator showing data source
@@ -456,11 +458,11 @@ void generateMockRecommendations({String? message}) {
               margin: const EdgeInsets.only(right: 8),
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: AppTheme.successColor,
+                //color: AppTheme.successColor,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                'LIVE DATA',
+                '',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 10,

@@ -188,8 +188,16 @@ class _ViewStudState extends State<ViewStud> {
 
                       return Padding(
                         padding: const EdgeInsets.all(16),
+                        child: Scrollbar(
+                          thumbVisibility: true,
+                          trackVisibility: true,
+                        
                         child: SingleChildScrollView(
                           scrollDirection: Axis.vertical,
+                          child: Scrollbar(
+                            thumbVisibility: true,
+                            trackVisibility: true,
+                    
                           child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Theme(
@@ -295,6 +303,8 @@ class _ViewStudState extends State<ViewStud> {
                               ),
                             ),
                           ),
+                        ),
+                        ),
                         ),
                       );
                     },
